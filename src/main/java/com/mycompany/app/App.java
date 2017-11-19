@@ -58,8 +58,13 @@ public class App
     	LayoutDiplayUnit layout = new LayoutDiplayUnit();
     	Configurations config = pcblayout.readConfigutations();
     	config.m_unitSize = 20;
+    	JPanel container = new JPanel();
+    	container.setLayout(new OverlayLayout(container));
     	Grid grid = new Grid(config);
-    	layout.add(grid);
+    	Transversal trnasversal = new Transversal(config);
+    	container.add(trnasversal);
+    	container.add(grid);
+    	layout.add(container);
     	layout.createLayout(config);
         
     }

@@ -29,7 +29,7 @@ public class Grid  extends JPanel{
 	//	g2.setStroke(new BasicStroke(2));
 	//	g2.draw(line);
 		//g.drawLine(10, 10, 10, 10);
-	
+		
 		int unitsize = m_config.m_unitSize;
 	
 		for (int i = 0; i <m_config.m_width; i++)
