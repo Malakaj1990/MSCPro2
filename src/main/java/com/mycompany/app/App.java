@@ -7,8 +7,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.jdom2.JDOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import java.awt.*;
@@ -26,9 +26,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import java.io.*;
 import java.util.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Attr;
 import org.xml.sax.SAXException;
@@ -62,11 +60,36 @@ public class App
     	container.setLayout(new OverlayLayout(container));
     	Grid grid = new Grid(config);
     	Transversal trnasversal = new Transversal(config);
-    	container.add(trnasversal);
+    	Route router = pcblayout.createRoute(config);
     	container.add(grid);
+    	container.add(router);
     	layout.add(container);
     	layout.createLayout(config);
         
+    }
+    
+    private Route createRoute(Configurations config)
+    {
+    	Route route = new Route(config);
+    	NodeInst node1 = new NodeInst();
+    	NodeInst node2 = new NodeInst();
+    	NodeInst node3 = new NodeInst();
+    	node1.m_xCoordinate = 10;
+    	node1.m_yCoordinate = 10;
+    	
+    	node2.m_xCoordinate = 10;
+    	node2.m_yCoordinate = 11;
+    	
+     	node3.m_xCoordinate = 11;
+    	node3.m_yCoordinate = 11;
+    	
+    	ArrayList<NodeInst> nodeList = new ArrayList<NodeInst>();
+    	nodeList.add(node1);
+    	nodeList.add(node2);
+    	nodeList.add(node3);
+    	
+    	route.addRoute(nodeList);
+    	return route;
     }
     
     private Configurations readConfigutations() throws ParserConfigurationException, SAXException, IOException

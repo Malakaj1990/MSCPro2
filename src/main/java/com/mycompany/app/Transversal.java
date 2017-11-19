@@ -39,10 +39,10 @@ public class Transversal extends JPanel {
 	                          //  RenderingHints.VALUE_ANTIALIAS_ON);
 	        int w = getWidth();
 	        int h = getHeight();
-	        Node sw = new Node();
+	        NodeInst sw = new NodeInst();
 	        sw.m_xCoordinate = w/8;
 	        sw.m_yCoordinate = h*7/8;
-	        Node ne = new Node();
+	        NodeInst ne = new NodeInst();
 	        ne.m_xCoordinate = w*7/8;
 	        ne.m_yCoordinate = h/8;
 	        
@@ -51,7 +51,7 @@ public class Transversal extends JPanel {
 	        drawArrowHead(g2, ne, sw, Color.blue);
 	}
 	  
-	 private void drawArrowHead(Graphics2D g2, Node tip, Node tail, Color color)
+	 private void drawArrowHead(Graphics2D g2, NodeInst tip, NodeInst tail, Color color)
 	 {
 	        g2.setPaint(color);
 	        double dy = tip.m_yCoordinate - tail.m_yCoordinate;

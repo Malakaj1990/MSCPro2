@@ -21,6 +21,7 @@ public class Grid  extends JPanel{
 	@Override
 	public void paintComponent(Graphics g)
 	{
+		setOpaque(false);
 		System.out.println( "Grid::Paint Component" );
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
