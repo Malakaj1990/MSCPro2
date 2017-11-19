@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pcblayout name = "MSC Project Layout">
+	<properties>
+		<height>50</height>
+		<width>60</width>
+	</properties>
+	
+	<components>
+		<component id = "IC1">
+			<height>10</height>
+			<width>20</width>
+			<xcordination>40</xcordination>
+			<ycordination>50</ycordination>
+		</component>
+		<component id = "IC2">
+			<height>30</height>
+			<width>40</width>
+			<xcordination>300</xcordination>
+			<ycordination>300</ycordination>
+		</component>
+	</components>
+</pcblayout>
