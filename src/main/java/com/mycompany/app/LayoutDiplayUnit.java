@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 
 import javax.swing.*;
+
 import java.awt.*;
 
 
@@ -33,7 +34,8 @@ public class LayoutDiplayUnit extends JFrame{
 
 	public LayoutDiplayUnit()
 	{
-		
+		m_container = new JPanel();
+		m_container.setLayout(new OverlayLayout(m_container));
 	}
 	
 	void createLayout(Configurations config)
@@ -45,6 +47,7 @@ public class LayoutDiplayUnit extends JFrame{
 	    setSize(config.m_width*unitSize, config.m_height*unitSize);
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setTitle(config.m_title);
+	    add(m_container);
 	    setResizable(false);
 	    setBackground(Color.gray);
 	    getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.BLACK));
@@ -52,6 +55,11 @@ public class LayoutDiplayUnit extends JFrame{
 		
 	}
 	
+	void addNewPanel(JPanel panel)
+	{
+		m_container.add(panel);
+	}
 
+	JPanel  m_container;
 	
 }

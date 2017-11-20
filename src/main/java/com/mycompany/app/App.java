@@ -19,9 +19,17 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
+
+
+
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+
+
+
 
 
 import java.io.*;
@@ -30,6 +38,8 @@ import java.util.*;
 import org.w3c.dom.Element;
 import org.w3c.dom.Attr;
 import org.xml.sax.SAXException;
+
+import sun.font.CreatedFontTracker;
 /**
  * Hello world!
  *
@@ -48,27 +58,45 @@ class Configurations
 
 public class App 
 {
-    public static void main( String[] args ) throws IOException, JDOMException, ParserConfigurationException, SAXException
+	
+	public App()
+	{
+		m_nodeInstMap = new TreeMap<Integer, NodeInst>();
+	}
+	
+	
+    public static void main( String[] args ) throws Exception
     {
         
  
         App pcblayout = new App();
-    	LayoutDiplayUnit layout = new LayoutDiplayUnit();
+        //ReadConfigurations
     	Configurations config = pcblayout.readConfigutations();
     	config.m_unitSize = 20;
-    	JPanel container = new JPanel();
-    	container.setLayout(new OverlayLayout(container));
-    	Grid grid = new Grid(config);
-    	Transversal trnasversal = new Transversal(config);
-    	Route router = pcblayout.createRoute(config);
-    	container.add(grid);
-    	container.add(router);
-    	layout.add(container);
-    	layout.createLayout(config);
+    	
+    	
+    	
+    	
+    	//pcblayout.drawPanels(config);
+    	
+    	//createGraph
+    	DIGraph graph = pcblayout.createGraph(config);
         
     }
     
-    private Route createRoute(Configurations config)
+    void drawPanels(Configurations config)
+    {
+    	//Draw Panels
+    	LayoutDiplayUnit layout = new LayoutDiplayUnit();
+    	Grid grid = new Grid(config);
+    	Transversal trnasversal = new Transversal(config);
+    	//Route router = pcblayout.createRoute(config);
+    	layout.addNewPanel(grid);
+    	//layout.addNewPanel(router);
+    	layout.createLayout(config);
+    }
+    
+  /*  private Route createRoute(Configurations config)
     {
     	Route route = new Route(config);
     	NodeInst node1 = new NodeInst();
@@ -91,6 +119,7 @@ public class App
     	route.addRoute(nodeList);
     	return route;
     }
+    */
     
     private Configurations readConfigutations() throws ParserConfigurationException, SAXException, IOException
     {
@@ -123,7 +152,7 @@ public class App
                     			.getTextContent();
         	height = Integer.parseInt(heightStr);
         	width = Integer.parseInt(widthStr);
-        	System.out.println("Width = " + height + "Height = " +width );
+        	System.out.println("Width = " + width + "Height = " + height);
         	
         }
         else
@@ -139,5 +168,47 @@ public class App
     	
     }
     
+   private DIGraph createGraph(Configurations config) throws Exception
+    {
+    	DIGraph graph = new DIGraph();
+    	int nodeID = 0;
+    	for(int i = 0;i<config.m_width;i++)
+    	{
+    		for(int j = 0; j < config.m_height;j++)
+    		{
+    			NodeInst node = new NodeInst();
+    			node.m_xCoordinate = i;
+    			node.m_yCoordinate = j;
+    			node.m_id = nodeID;
+    			m_nodeInstMap.put(node.m_id, node);
+    			graph.addNode(node);
+    			++nodeID;
+    		}
+    	}
+    	
+    	for(int i = 0; i < config.m_width; i++)
+    	{
+    		for(int j = 0; j < config.m_height;j++)
+    		{
+    			if(i != config.m_width-1)
+    			{
+    				graph.addConnection((j*config.m_width+i),(j*config.m_width+i+1));
+    			}
+    			
+    			if(j!= config.m_height-1)
+    			{
+    				graph.addConnection((j*config.m_width+i),((j+1)*config.m_width+i));
+    			}
+    		}
+    	}
+    	
+    	
+    	System.out.println(graph.getChildList(61));
+    	return graph;
+    	
+    	
+    }
+    
+   private TreeMap<Integer,NodeInst> m_nodeInstMap;
     
 }

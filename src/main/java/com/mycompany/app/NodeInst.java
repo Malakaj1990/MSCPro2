@@ -8,5 +8,6 @@ public class NodeInst {
 	}
 	public int m_xCoordinate;
 	public int m_yCoordinate;
+	public int m_id;
 
 }
