@@ -86,6 +86,10 @@ public class App
         
     	//DFS
     	pcblayout.DepthFirstSearch(graph);
+    	//BFS
+    	pcblayout.BreadthFirstSearch(graph);
+    	//Informend Search 
+    	pcblayout.InformedSearch(graph);
     	
     }
     
@@ -218,10 +222,26 @@ public class App
    {
 		System.out.println("DFS Started");
     	DepthFirstSearch dfs = new DepthFirstSearch(graph);
-    	System.out.println(dfs.getRoute(60,120));
+    	System.out.println(dfs.getRoute(60,130));
     	System.out.println("DFS Ended");
    }
    
+   
+   private void BreadthFirstSearch(DIGraph graph) throws Exception
+   {
+	   System.out.println("BFS Started");
+   		BreadthFirstSearch bfs = new BreadthFirstSearch(graph);
+   		System.out.println(bfs.getRoute(60,130));
+   		System.out.println("BFS Ended");
+   }
+   
+   private void InformedSearch(DIGraph graph) throws Exception
+   {
+	   System.out.println("InformedSearch Started");
+   		InformedSearch informendSearch = new InformedSearch(graph,m_nodeInstMap);
+   		System.out.println(informendSearch.getRoute(60,130));
+   		System.out.println("InformedSearch Ended");
+   }
    
    private TreeMap<Integer,NodeInst> m_nodeInstMap;
     
