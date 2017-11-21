@@ -23,9 +23,11 @@ import java.io.IOException;
 
 
 
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 
 
 
@@ -82,6 +84,9 @@ public class App
     	//createGraph
     	DIGraph graph = pcblayout.createGraph(config);
         
+    	//DFS
+    	pcblayout.DepthFirstSearch(graph);
+    	
     }
     
     void drawPanels(Configurations config)
@@ -209,6 +214,15 @@ public class App
     	
     }
     
+   private void DepthFirstSearch(DIGraph graph) throws Exception
+   {
+		System.out.println("DFS Started");
+    	DepthFirstSearch dfs = new DepthFirstSearch(graph);
+    	System.out.println(dfs.getRoute(60,120));
+    	System.out.println("DFS Ended");
+   }
+   
+   
    private TreeMap<Integer,NodeInst> m_nodeInstMap;
     
 }
