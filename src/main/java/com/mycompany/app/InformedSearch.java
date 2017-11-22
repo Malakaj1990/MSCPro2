@@ -95,6 +95,8 @@ public class InformedSearch{
 		}
 		
 		m_nodeList.clear();
+		m_toProcessStack.clear();
+		m_processedStack.clear();
 		return route;
 	}
 	
@@ -148,8 +150,8 @@ public class InformedSearch{
 			 int nextY = childNodeInst.m_yCoordinate;
 			 double error1 = expectedx-nextX;
 			 double error2  = expectedy-nextY;
-			// double funcation = Math.pow(error1, 2)+ Math.pow(error2,2);
-			 double funcation = Math.abs(error1 + error2);
+			double funcation = Math.pow(error1, 2)+ Math.pow(error2,2);
+			 //double funcation = Math.abs(error1 + error2);
 			 INFNodeInst childInFnodeInst = new  INFNodeInst(childNodeID,funcation);
 			 priorityQueue.add(childInFnodeInst);
 		 }		

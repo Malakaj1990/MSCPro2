@@ -7,16 +7,25 @@
 	
 	<components>
 		<component id = "IC1">
-			<height>10</height>
-			<width>20</width>
+			<height>4</height>
+			<width>2</width>
 			<xcordination>40</xcordination>
 			<ycordination>50</ycordination>
 		</component>
 		<component id = "IC2">
-			<height>30</height>
-			<width>40</width>
-			<xcordination>300</xcordination>
-			<ycordination>300</ycordination>
+			<height>4</height>
+			<width>2</width>
+			<xcordination>10</xcordination>
+			<ycordination>20</ycordination>
 		</component>
 	</components>
+	
+	<connections>
+		<connection>
+			<source>"IC1.1"</source>
+			<destination>"IC2.4"</destination>
+		</connection>
+	
+	</connections>
+	
 </pcblayout>

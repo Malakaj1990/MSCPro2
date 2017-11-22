@@ -24,9 +24,13 @@ import java.io.IOException;
 
 
 
+
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+
 
 
 
@@ -79,15 +83,15 @@ public class App
     	
     	
     	
-    	//pcblayout.drawPanels(config);
+    	pcblayout.drawPanels(config);
     	
     	//createGraph
     	DIGraph graph = pcblayout.createGraph(config);
         
     	//DFS
-    	pcblayout.DepthFirstSearch(graph);
+    	//pcblayout.DepthFirstSearch(graph);
     	//BFS
-    	pcblayout.BreadthFirstSearch(graph);
+    //	pcblayout.BreadthFirstSearch(graph);
     	//Informend Search 
     	pcblayout.InformedSearch(graph);
     	
@@ -96,13 +100,14 @@ public class App
     void drawPanels(Configurations config)
     {
     	//Draw Panels
-    	LayoutDiplayUnit layout = new LayoutDiplayUnit();
+    	 m_layoutPCB = new LayoutDiplayUnit();
+    	m_route = new Route(config);
     	Grid grid = new Grid(config);
     	Transversal trnasversal = new Transversal(config);
     	//Route router = pcblayout.createRoute(config);
-    	layout.addNewPanel(grid);
-    	//layout.addNewPanel(router);
-    	layout.createLayout(config);
+    	m_layoutPCB.addNewPanel(grid);
+    	m_layoutPCB.addNewPanel(m_route);
+    	m_layoutPCB.createLayout(config);
     }
     
   /*  private Route createRoute(Configurations config)
@@ -181,10 +186,11 @@ public class App
     {
     	DIGraph graph = new DIGraph();
     	int nodeID = 0;
-    	for(int i = 0;i<config.m_width;i++)
+    	for(int j = 0; j < config.m_height;j++)
     	{
-    		for(int j = 0; j < config.m_height;j++)
-    		{
+    		for(int i = 0;i<config.m_width;i++)
+        	{
+        		
     			NodeInst node = new NodeInst();
     			node.m_xCoordinate = i;
     			node.m_yCoordinate = j;
@@ -212,7 +218,6 @@ public class App
     	}
     	
     	
-    	System.out.println(graph.getChildList(61));
     	return graph;
     	
     	
@@ -222,7 +227,8 @@ public class App
    {
 		System.out.println("DFS Started");
     	DepthFirstSearch dfs = new DepthFirstSearch(graph);
-    	System.out.println(dfs.getRoute(60,130));
+    	System.out.println(dfs.getRoute(61,136));
+    	//drawRoute(dfs.getRoute(61,136));
     	System.out.println("DFS Ended");
    }
    
@@ -231,18 +237,41 @@ public class App
    {
 	   System.out.println("BFS Started");
    		BreadthFirstSearch bfs = new BreadthFirstSearch(graph);
-   		System.out.println(bfs.getRoute(60,130));
+   		System.out.println(bfs.getRoute(60,120));
+   		//drawRoute(bfs.getRoute(61,136));
    		System.out.println("BFS Ended");
+   		
    }
    
    private void InformedSearch(DIGraph graph) throws Exception
    {
 	   System.out.println("InformedSearch Started");
    		InformedSearch informendSearch = new InformedSearch(graph,m_nodeInstMap);
-   		System.out.println(informendSearch.getRoute(60,130));
+   		System.out.println(informendSearch.getRoute(60,220));
+   		//drawRoute(informendSearch.getRoute(61,136));
    		System.out.println("InformedSearch Ended");
+   }
+   
+   
+   private void drawRoute(ArrayList<Integer> route)
+   {
+	   ArrayList<NodeInst> nodeList = new ArrayList<NodeInst>();
+	  Iterator<Integer> itr = route.iterator();
+	  while(itr.hasNext())
+	  {
+		  int nodeID = itr.next();
+		  System.out.println(nodeID);
+		  nodeList.add(m_nodeInstMap.get(nodeID));
+		 
+	  }
+	   
+	  m_route.addRoute(nodeList); 
+	  m_route.repaint();
+	  
    }
    
    private TreeMap<Integer,NodeInst> m_nodeInstMap;
     
+   LayoutDiplayUnit m_layoutPCB;
+   Route m_route;
 }

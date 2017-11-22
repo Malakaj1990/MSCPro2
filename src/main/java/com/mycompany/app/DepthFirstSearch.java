@@ -64,6 +64,8 @@ public class DepthFirstSearch {
 		}
 		
 		m_nodeList.clear();
+		m_toProcessStack.clear();
+		m_processedStack.clear();
 		return route;
 	}
 	

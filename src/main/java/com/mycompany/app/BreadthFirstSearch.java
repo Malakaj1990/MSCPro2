@@ -65,6 +65,8 @@ public class BreadthFirstSearch {
 		}
 		
 		m_nodeList.clear();
+		m_toProcessQueue.clear();
+		m_processedQueue.clear();
 		return route;
 	}
 	
