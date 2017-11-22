@@ -83,17 +83,19 @@ public class App
     	
     	
     	
-    	pcblayout.drawPanels(config);
+    //	pcblayout.drawPanels(config);
     	
     	//createGraph
     	DIGraph graph = pcblayout.createGraph(config);
         
     	//DFS
-    	//pcblayout.DepthFirstSearch(graph);
+    	pcblayout.DepthFirstSearch(graph);
     	//BFS
-    //	pcblayout.BreadthFirstSearch(graph);
+       pcblayout.BreadthFirstSearch(graph);
     	//Informend Search 
     	pcblayout.InformedSearch(graph);
+    	
+    	pcblayout.AStarSearch(graph);
     	
     }
     
@@ -237,7 +239,7 @@ public class App
    {
 	   System.out.println("BFS Started");
    		BreadthFirstSearch bfs = new BreadthFirstSearch(graph);
-   		System.out.println(bfs.getRoute(60,120));
+   		System.out.println(bfs.getRoute(61,136));
    		//drawRoute(bfs.getRoute(61,136));
    		System.out.println("BFS Ended");
    		
@@ -247,9 +249,19 @@ public class App
    {
 	   System.out.println("InformedSearch Started");
    		InformedSearch informendSearch = new InformedSearch(graph,m_nodeInstMap);
-   		System.out.println(informendSearch.getRoute(60,220));
+   		System.out.println(informendSearch.getRoute(61,136));
    		//drawRoute(informendSearch.getRoute(61,136));
    		System.out.println("InformedSearch Ended");
+   }
+   
+   private void AStarSearch(DIGraph graph) throws Exception
+   {
+	   System.out.println("AStar Started");
+   		AStartSearch astar = new AStartSearch(graph,m_nodeInstMap);
+   		System.out.println(astar.getRoute(61,136));
+   		//drawRoute(bfs.getRoute(61,136));
+   		System.out.println("AStar Ended");
+   		
    }
    
    
