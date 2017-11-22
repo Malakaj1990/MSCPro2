@@ -26,9 +26,13 @@ import java.io.IOException;
 
 
 
+
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+
 
 
 
@@ -61,6 +65,25 @@ class Configurations
 	
 }
 
+class PCBComponent
+{
+	public PCBComponent(String id, String xCoordinate, String yCoordinate, String width, String height )
+	{
+		m_id = id;
+		m_xCoordinate = Integer.parseInt(xCoordinate);
+		m_yCoordinate = Integer.parseInt(yCoordinate);
+		m_width = Integer.parseInt(width);
+		m_height = Integer.parseInt(height);
+	}
+	
+	int m_xCoordinate;
+	int m_yCoordinate;
+	int m_width;
+	int m_height;
+	String m_id;
+	
+}
+
 
 public class App 
 {
@@ -68,6 +91,7 @@ public class App
 	public App()
 	{
 		m_nodeInstMap = new TreeMap<Integer, NodeInst>();
+		m_componentList = new ArrayList<PCBComponent>();
 	}
 	
 	
@@ -83,19 +107,19 @@ public class App
     	
     	
     	
-    //	pcblayout.drawPanels(config);
+    	pcblayout.drawPanels(config);
     	
     	//createGraph
-    	DIGraph graph = pcblayout.createGraph(config);
+    	//DIGraph graph = pcblayout.createGraph(config);
         
     	//DFS
-    	pcblayout.DepthFirstSearch(graph);
+    	//pcblayout.DepthFirstSearch(graph);
     	//BFS
-       pcblayout.BreadthFirstSearch(graph);
+       //pcblayout.BreadthFirstSearch(graph);
     	//Informend Search 
-    	pcblayout.InformedSearch(graph);
+    	//pcblayout.InformedSearch(graph);
     	
-    	pcblayout.AStarSearch(graph);
+    	//pcblayout.AStarSearch(graph);
     	
     }
     
@@ -104,7 +128,7 @@ public class App
     	//Draw Panels
     	 m_layoutPCB = new LayoutDiplayUnit();
     	m_route = new Route(config);
-    	Grid grid = new Grid(config);
+    	Grid grid = new Grid(config,m_componentList);
     	Transversal trnasversal = new Transversal(config);
     	//Route router = pcblayout.createRoute(config);
     	m_layoutPCB.addNewPanel(grid);
@@ -137,7 +161,7 @@ public class App
     }
     */
     
-    private Configurations readConfigutations() throws ParserConfigurationException, SAXException, IOException
+    private Configurations readConfigutations() throws Exception
     {
 
 		int height = 5;
@@ -179,6 +203,36 @@ public class App
         config.m_title = title;
         config.m_height = height;
         config.m_width = width;
+        
+        NodeList nComponentsList =  doc.getElementsByTagName("component");
+       
+        for(int i = 0; i < nComponentsList.getLength(); i++)
+        {
+        	Element componentElement = (Element)nComponentsList.item(i);
+        	String id = componentElement.getAttribute("id");
+        	String xCoordinate = componentElement.getElementsByTagName("xcordination").item(0).getTextContent();
+        	String yCoordinate = componentElement.getElementsByTagName("ycordination").item(0).getTextContent();
+        	String compWidth = componentElement.getElementsByTagName("width").item(0).getTextContent();
+        	String compHeight = componentElement.getElementsByTagName("height").item(0).getTextContent();
+        	
+        	//System.out.println(id + " "+ xCoordinate + " "+ yCoordinate+ " "+ compWidth+" " + compHeight);
+        	
+        	PCBComponent component = new PCBComponent(id,xCoordinate,yCoordinate,compWidth,compHeight);
+        	if((component.m_xCoordinate+component.m_width) > config.m_width)
+			{
+				throw new Exception();
+			}
+        	
+        	if((component.m_yCoordinate+component.m_height) > config.m_height)
+			{
+        		System.out.println(component.m_yCoordinate+ " "+ component.m_height);
+        		throw new Exception();
+			}
+        	m_componentList.add(component);
+        }
+        
+        
+        
         
     	return config;
     	
@@ -286,4 +340,5 @@ public class App
     
    LayoutDiplayUnit m_layoutPCB;
    Route m_route;
+   private ArrayList<PCBComponent> m_componentList;
 }

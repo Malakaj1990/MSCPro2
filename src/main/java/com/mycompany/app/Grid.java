@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -13,9 +14,10 @@ import javax.swing.JPanel;
 
 public class Grid  extends JPanel{
 
-	public Grid(Configurations config)
+	public Grid(Configurations config,ArrayList<PCBComponent> componentList)
 	{
 		m_config = config;
+		m_componentList = componentList;
 	}
 
 	@Override
@@ -45,6 +47,21 @@ public class Grid  extends JPanel{
 			}
 		}
 		
+		
+		for(int i = 0 ; i < m_componentList.size(); i++)
+		{
+			PCBComponent comp = m_componentList.get(i);
+			g.drawRect(comp.m_xCoordinate*unitsize, comp.m_yCoordinate*unitsize, comp.m_width*unitsize, 
+					comp.m_height*unitsize);
+			
+			System.out.println(comp.m_xCoordinate+ " "+ comp.m_yCoordinate+ " "+
+					 comp.m_width+ " " + comp.m_height);
+			// g.setColor(Color.RED); 
+			
+			
+		}
+		
+		
 	}
 	
 
@@ -56,5 +73,6 @@ public class Grid  extends JPanel{
     }
 	
 	private Configurations m_config;
+	ArrayList<PCBComponent> m_componentList;
 	
 }
