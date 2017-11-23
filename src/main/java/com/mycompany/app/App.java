@@ -28,9 +28,17 @@ import java.io.IOException;
 
 
 
+
+
+
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+
+
+
 
 
 
@@ -84,6 +92,12 @@ class PCBComponent
 	
 }
 
+class Connection
+{
+	public int m_destinationNodeID;
+	public int m_sourceNodeID;
+}
+
 
 public class App 
 {
@@ -91,7 +105,9 @@ public class App
 	public App()
 	{
 		m_nodeInstMap = new TreeMap<Integer, NodeInst>();
-		m_componentList = new ArrayList<PCBComponent>();
+		m_componentList = new TreeMap<String,PCBComponent>();
+		m_connectionList = new ArrayList<Connection>();
+		m_invalidNodes = new TreeSet<Integer>();
 	}
 	
 	
@@ -110,16 +126,16 @@ public class App
     	pcblayout.drawPanels(config);
     	
     	//createGraph
-    	//DIGraph graph = pcblayout.createGraph(config);
+    	DIGraph graph = pcblayout.createGraph(config);
         
     	//DFS
     	//pcblayout.DepthFirstSearch(graph);
     	//BFS
-       //pcblayout.BreadthFirstSearch(graph);
+      // pcblayout.BreadthFirstSearch(graph);
     	//Informend Search 
     	//pcblayout.InformedSearch(graph);
     	
-    	//pcblayout.AStarSearch(graph);
+    	pcblayout.AStarSearch(graph);
     	
     }
     
@@ -228,15 +244,91 @@ public class App
         		System.out.println(component.m_yCoordinate+ " "+ component.m_height);
         		throw new Exception();
 			}
-        	m_componentList.add(component);
+        	m_componentList.put(component.m_id, component);
         }
         
         
+        NodeList nConnctionList =  doc.getElementsByTagName("connection");
+        for(int i = 0; i < nConnctionList.getLength(); i++)
+        {
+        	Element connectionElement = (Element)nConnctionList.item(i);
+        	String sourceComponentString = connectionElement.getElementsByTagName("source").item(0).getTextContent();
+        	StringTokenizer tokenizer = new StringTokenizer(sourceComponentString);
+        	String componentID = tokenizer.nextToken(".");
+        	PCBComponent component = m_componentList.get(componentID);
+        	String portIDStr = tokenizer.nextToken();
+        	int portID = Integer.parseInt(portIDStr);
+        	int sourceNodeID = getNodeIDFromComponent(component,portID,config);
+        	String destinationString = connectionElement.getElementsByTagName("destination").item(0).getTextContent();
+        	tokenizer = new StringTokenizer(destinationString);
+        	componentID = tokenizer.nextToken(".");
+        	portIDStr = tokenizer.nextToken();
+        	portID = Integer.parseInt(portIDStr);
+        	component = m_componentList.get(componentID);
+        	int destincationNodeID = getNodeIDFromComponent(component,portID,config);
+        	
+        	Connection connection = new Connection();
+        	connection.m_sourceNodeID = sourceNodeID;
+        	connection.m_destinationNodeID = destincationNodeID;
+        	
+        	System.out.println(connection.m_sourceNodeID + " "+connection.m_destinationNodeID);
+        	m_connectionList.add(connection);
+        	
+        }
         
-        
+        populateInvalidNodes(config);
     	return config;
     	
     }
+    
+   private int getNodeIDFromComponent(PCBComponent component, int portID, Configurations config) throws Exception
+    {
+	  // System.out.println("PortID = " + portID);
+    	if(portID > component.m_height*2)
+    	{
+    		throw new Exception();
+    	}
+    	
+    	int xCoordinate;
+    	int depth;
+    	if(portID <=  component.m_height)
+    	{
+    		xCoordinate = component.m_xCoordinate;
+    		depth = portID;
+    	}
+    	else
+    	{
+    		xCoordinate = component.m_xCoordinate+ component.m_width;
+    		depth = portID - component.m_height;
+    	}
+    	
+    	int yCoordinate = component.m_yCoordinate + depth;
+    	
+    	int nodeID = yCoordinate*config.m_width + xCoordinate;
+    	return nodeID;
+    	
+    }
+    
+   private void populateInvalidNodes(Configurations config)
+   {
+	   Collection<PCBComponent> componentList = m_componentList.values();
+		 
+		Iterator<PCBComponent> itr = componentList.iterator();
+		
+		while(itr.hasNext())
+		{
+			PCBComponent component = itr.next();
+			for(int j = 0; j <= component.m_height; j++ )
+			{
+				for(int i = 0; i <= component.m_width;i++)
+				{
+					int val = (component.m_yCoordinate+j)*config.m_width + component.m_xCoordinate+i;
+					m_invalidNodes.add(val);
+				}
+			}
+			
+		}
+   }
     
    private DIGraph createGraph(Configurations config) throws Exception
     {
@@ -293,8 +385,12 @@ public class App
    {
 	   System.out.println("BFS Started");
    		BreadthFirstSearch bfs = new BreadthFirstSearch(graph);
-   		System.out.println(bfs.getRoute(61,136));
-   		//drawRoute(bfs.getRoute(61,136));
+   		for(int i = 0 ;  i < m_connectionList.size(); i++)
+   		{
+   			Connection connection = m_connectionList.get(i);
+   			drawRoute(bfs.getRoute(connection.m_sourceNodeID,connection.m_destinationNodeID));
+   		}
+   		
    		System.out.println("BFS Ended");
    		
    }
@@ -311,9 +407,12 @@ public class App
    private void AStarSearch(DIGraph graph) throws Exception
    {
 	   System.out.println("AStar Started");
-   		AStartSearch astar = new AStartSearch(graph,m_nodeInstMap);
-   		System.out.println(astar.getRoute(61,136));
-   		//drawRoute(bfs.getRoute(61,136));
+   		AStartSearch astar = new AStartSearch(graph,m_nodeInstMap,m_invalidNodes);
+   		for(int i = 0 ;  i < m_connectionList.size(); i++)
+   		{
+   			Connection connection = m_connectionList.get(i);
+   			drawRoute(astar.getRoute(connection.m_sourceNodeID,connection.m_destinationNodeID));
+   		}
    		System.out.println("AStar Ended");
    		
    }
@@ -326,7 +425,6 @@ public class App
 	  while(itr.hasNext())
 	  {
 		  int nodeID = itr.next();
-		  System.out.println(nodeID);
 		  nodeList.add(m_nodeInstMap.get(nodeID));
 		 
 	  }
@@ -340,5 +438,7 @@ public class App
     
    LayoutDiplayUnit m_layoutPCB;
    Route m_route;
-   private ArrayList<PCBComponent> m_componentList;
+   private TreeMap<String,PCBComponent> m_componentList;
+   private ArrayList<Connection> m_connectionList;
+   private Set<Integer> m_invalidNodes;
 }

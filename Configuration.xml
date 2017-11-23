@@ -18,13 +18,25 @@
 			<xcordination>10</xcordination>
 			<ycordination>20</ycordination>
 		</component>
+			<component id = "IC3">
+			<height>4</height>
+			<width>2</width>
+			<xcordination>40</xcordination>
+			<ycordination>10</ycordination>
+		</component>
+		
 	</components>
 	
 	<connections>
 		<connection>
-			<source>"IC1.1"</source>
-			<destination>"IC2.4"</destination>
+			<source>IC1.7</source>
+			<destination>IC2.6</destination>
 		</connection>
+		<connection>
+			<source>IC2.2</source>
+			<destination>IC3.5</destination>
+		</connection>
+	
 	
 	</connections>
 	

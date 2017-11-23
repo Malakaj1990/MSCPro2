@@ -100,13 +100,14 @@ class AStarNodeInst implements Comparable<AStarNodeInst>
 
 public class AStartSearch {
 	
-	public AStartSearch(DIGraph graph,TreeMap<Integer,NodeInst> nodeInstMap)
+	public AStartSearch(DIGraph graph,TreeMap<Integer,NodeInst> nodeInstMap, Set<Integer> invalidSet)
 	{
 		m_graph =  graph;
 		m_nodeInstMap = nodeInstMap;
 		m_priorityQueue = new PriorityQueue<AStarNodeInst>();
 		m_nodeList = new HashMap<Integer, AStarNodeInst>();
 		m_processedStack = new ArrayDeque<Integer>();
+		m_invalidSet = invalidSet;
 	}
 	
 	public ArrayList<Integer> getRoute(int sourceNodeId, int destinationNodeID) throws Exception
@@ -129,6 +130,13 @@ public class AStartSearch {
 				System.out.println("AStar search source Found");
 				isSourceFound = true;
 				break;
+			}
+			if(selectedInst.m_id != sourceNodeId && selectedInst.m_id != destinationNodeID )
+			{
+				if(m_invalidSet.contains(selectedInst.m_id) == true)
+				{
+					continue;
+				}
 			}
 			
 			Set<Integer> childList = m_graph.getChildList(selectedInst.m_id);
@@ -190,4 +198,5 @@ public class AStartSearch {
 	Deque<Integer> m_processedStack;
 	NodeInst m_destinationInst;
 	TreeMap<Integer,NodeInst>  m_nodeInstMap;
+	Set<Integer> m_invalidSet;
 }

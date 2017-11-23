@@ -7,14 +7,18 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.TreeMap;
 
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 
 
 public class Grid  extends JPanel{
 
-	public Grid(Configurations config,ArrayList<PCBComponent> componentList)
+	public Grid(Configurations config,TreeMap<String,PCBComponent> componentList)
 	{
 		m_config = config;
 		m_componentList = componentList;
@@ -48,14 +52,19 @@ public class Grid  extends JPanel{
 		}
 		
 		
-		for(int i = 0 ; i < m_componentList.size(); i++)
+		Collection componentList = m_componentList.values();
+		 
+		Iterator<PCBComponent> itr = componentList.iterator();
+		
+		while(itr.hasNext())
 		{
-			PCBComponent comp = m_componentList.get(i);
+			PCBComponent comp = itr.next();
 			g.drawRect(comp.m_xCoordinate*unitsize, comp.m_yCoordinate*unitsize, comp.m_width*unitsize, 
 					comp.m_height*unitsize);
-			
-			System.out.println(comp.m_xCoordinate+ " "+ comp.m_yCoordinate+ " "+
-					 comp.m_width+ " " + comp.m_height);
+			g.drawString(comp.m_id, comp.m_xCoordinate*unitsize, comp.m_yCoordinate*unitsize);
+		
+			//System.out.println(comp.m_xCoordinate+ " "+ comp.m_yCoordinate+ " "+
+			//		 comp.m_width+ " " + comp.m_height);
 			// g.setColor(Color.RED); 
 			
 			
@@ -73,6 +82,6 @@ public class Grid  extends JPanel{
     }
 	
 	private Configurations m_config;
-	ArrayList<PCBComponent> m_componentList;
+	TreeMap<String,PCBComponent> m_componentList;
 	
 }
