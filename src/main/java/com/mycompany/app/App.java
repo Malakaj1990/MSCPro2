@@ -135,7 +135,8 @@ public class App
     	//Informend Search 
     	//pcblayout.InformedSearch(graph);
     	
-    	pcblayout.AStarSearch(graph);
+    	//pcblayout.AStarSearch(graph);
+    	pcblayout.ImprovedAStarSearch(graph);
     	
     }
     
@@ -417,6 +418,18 @@ public class App
    		
    }
    
+   private void ImprovedAStarSearch(DIGraph graph) throws Exception
+   {
+	   System.out.println("Improved AStar Started");
+   		ImprovedAStar astar = new ImprovedAStar(graph,m_nodeInstMap,m_invalidNodes);
+   		for(int i = 0 ;  i < m_connectionList.size(); i++)
+   		{
+   			Connection connection = m_connectionList.get(i);
+   			drawRoute(astar.getRoute(connection.m_sourceNodeID,connection.m_destinationNodeID));
+   		}
+   		System.out.println("Imrpved AStar Ended");
+   		
+   }
    
    private void drawRoute(ArrayList<Integer> route)
    {
